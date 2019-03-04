@@ -10,9 +10,13 @@
 
 #Goal:
 # Import Data!
+## Ensure that the data has been properly imported.
 # Read Data!
+##Ensure that the data runs through the full application.
 # Return values!
+##Tuning values returned by tensorflow.
 # Plot on Tensorboard
+##Plot data on Tensorboard and online.
 import csv
 import tensorflow as tf
 import os
