@@ -176,4 +176,7 @@ for i in range(FLAGS.max_steps):
     summary, _ = sess.run([merged, train_step], feed_dict=feed_dict(True))
     train_writer.add_summary(summary, i)
 
+#Running the entire application
+def runARIEL():
+  userDataImport()
   
