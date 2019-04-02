@@ -46,9 +46,8 @@ def dataLoad(userData1, userData2 ):
 
 
 def datasetSet(dataset):
-dataset1 = tf.data.Dataset.from_tensor_slices(tf.random_uniform([4, 10]))
-print(dataset1.output_types)  # ==> "tf.float32"
-print(dataset1.output_shapes)  # ==> "(10,)"
+  dataset1 = tf.data.Dataset.from_tensor_slices(tf.random_uniform([4, 10]))
+  print(dataset1.output_types)  # ==> "tf.float32"print(dataset1.output_shapes)  # ==> "(10,)"
 
 dataset2 = tf.data.Dataset.from_tensor_slices(
    (tf.random_uniform([4]),
@@ -193,7 +192,7 @@ for i in range(FLAGS.max_steps):
 def runARIEL():
   userDataImport()
   
-=======
+
 #SingularityIndustries
 #Rishab Singh
 #Amari Matthews
@@ -264,4 +263,3 @@ def engineCore():
     coord.join(threads)
 engineCore()
 
->>>>>>> f3c02d4555eaf00cf0304d8c3e373c9621f07337
