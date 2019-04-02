@@ -40,7 +40,7 @@ def userDataImport():
 
 #Import data as CSV and read columns
 def dataLoad(userData1, userData2 ):
-    filenames = [userData]
+    filenames = [userData1, userData2]
     record_defaults = [tf.float32] * 8 
     dataset = tf.contrib.data.CsvDataset(filenames, record_defaults)
 
