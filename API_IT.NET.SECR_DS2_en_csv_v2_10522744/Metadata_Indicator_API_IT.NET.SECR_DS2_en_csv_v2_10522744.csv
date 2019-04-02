@@ -1,0 +1,2 @@
+﻿"INDICATOR_CODE","INDICATOR_NAME","SOURCE_NOTE","SOURCE_ORGANIZATION",
+"IT.NET.SECR","Secure Internet servers","The number of distinct, publicly-trusted TLS/SSL certificates found in the Netcraft Secure Server Survey.","Netcraft (http://www.netcraft.com/)",
