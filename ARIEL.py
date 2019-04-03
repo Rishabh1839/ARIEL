@@ -1,39 +1,44 @@
+# Ariel Core engine
 
-#Ariel Core engine
-
-
-###################IMPORTS################################
+# ##################IMPORTS################################
 import os
 import tensorflow as tf
 import tensorboard
 import csv
+import numpy as np
+from tensorflow import keras
+
 import pandas as pd
-#from __future__ import absolute_import, division, print_function
-#import numpy as np 
-#from tensorflow import kearas
+from sklearn.model_selection import train_test_split
 
-##############IF I NEED ANYTHING ELSE, ILL ADD IT#########3
-###########################################################
-###########################################################
+# def fileImport():
+# print("Enter file path for the unstructured data.")
+# userData = input("")
+# print(tf.__version__)
 
-#TO DO:
-#BELOW IS THE FILE IMPORT. WE ARE IMPORTING ALL FILES 
-#IN A FOLDER ====> /PATH/TO/FOLDER/*   <====ALL FILES
-
-def fileImport ():
-
-  print("Eneter file path for the unstructured data.")
-  userData = input("")
-  print(tf.__version__)
+# Reading the CSV
+# filenames = ["/home/hunt3r/Desktop/USData1.csv"]
+# record_defaults = [[0.0]] * 8
+# dataset = tf.data.experimental.CsvDataset(filenames, record_defaults)
 
 
-  #Reading the CSV
-  filenames = ["/tmp/top800.csv"]
-  record_defaults = [[0.0]] * 8
-  #Import the CSV-encoded training data with pandas for pre-processing.
-  #TODO: parse and split up the dataset in this program after importing.
-  #To encode the CSV file with only half of the dataset, do the following in a linux shell
-  #  $ head -n 800 USDaata1.csv > top800.csv
-  #  $ tail -n 800 USDaata1.csv > bottom800.csv
-  csvfix = pd.read_csv(filenames)
-  dataset = tf.data.experimental.CsvDataset(csvfix, record_defaults)
+dataset_url = ' '
+data = pd.read_csv(dataset_url)
+print(data.head())
+
+y = data.temp
+x = data.drop('temp', axis=1)
+
+X_train, X_test, Y_train, X_test = train_test_split(X, Y, test_size=0.2)
+print("\nX_train:\n")
+print(X_train.head())
+print(X_train.shape())
+
+print("\nX_test:\n")
+print(X_test.head())
+print(X_test.shape)
+# #############IF I NEED ANYTHING ELSE, ILL ADD IT#########3
+
+# TO DO:
+# BELOW IS THE FILE IMPORT. WE ARE IMPORTING ALL FILES
+# IN A FOLDER ====> /PATH/TO/FOLDER/*   <====ALL FILES
