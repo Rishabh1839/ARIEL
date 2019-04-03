@@ -22,8 +22,8 @@ from sklearn.model_selection import train_test_split
 # dataset = tf.data.experimental.CsvDataset(filenames, record_defaults)
 
 
-dataset_url = ' '
-data = pd.read_csv(dataset_url)
+#dataset_url = ' '
+data = pd.read_csv('training.csv')
 print(data.head())
 
 y = data.temp
