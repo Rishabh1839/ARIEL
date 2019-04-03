@@ -29,7 +29,7 @@ print(data.head())
 y = data.temp
 x = data.drop('temp', axis=1)
 
-X_train, X_test, Y_train, X_test = train_test_split(X, Y, test_size=0.2)
+X_train, X_test, Y_train, X_test = train_test_split(x, y, test_size=0.2)
 print("\nX_train:\n")
 print(X_train.head())
 print(X_train.shape())
