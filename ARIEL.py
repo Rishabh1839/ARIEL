@@ -68,9 +68,15 @@ with tf.Session() as sess:
 # dataset = tf.data.experimental.CsvDataset(filenames, record_defaults)
 
 
+
 # dataset_url = ' '
 # data = pd.read_csv(dataset_url)
 # print(data.head())
+
+#dataset_url = ' '
+# data = pd.read_csv('training.csv')
+# print(data.head())
+
 
 # y = data.temp
 # x = data.drop('temp', axis=1)
