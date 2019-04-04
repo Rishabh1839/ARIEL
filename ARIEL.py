@@ -2,8 +2,6 @@
 
 # ##################IMPORTS################################
 import os
-
-import line as line
 import tensorflow as tf
 import tensorboard
 import csv
@@ -31,8 +29,8 @@ with tf.Session() as sess:
         next(inf)
         for line in inf:
             # reading our data using python into our features
-            country_name, country_code, indicator_name, indicator_code = line.strip(), line.split(", ")
-            total = sess.run(printerop, feed_dict={features: [country_code, indicator_code], country: country_name})
+            country_name, indicator_name = line.strip(), line.split(", ")
+            total = sess.run(printerop, feed_dict={features: [country, indicator], country: country_name})
             print(country_name, indicator_name)
 
 
@@ -40,8 +38,8 @@ def create_file_reader(filename_queue):
     reader = tf.TextLineReader(skip_header_line=1)
     _, csv_row = reader.read(filename_queue)
     record_defaults = [[""], [""], [0], [0], [0], [0]]
-    country_name, country_code, indicator_name, indicator_code = tf.decode_csv(csv_row, record_defaults=record_defaults)
-    features = tf.pack([country_name, country_code, indicator_name, indicator_code])
+    country_name, country_code, indicator_name = tf.decode_csv(csv_row, record_defaults=record_defaults)
+    features = tf.pack([country_name, country_code, indicator_name])
     return features, country
 
 
