@@ -2,6 +2,8 @@
 
 # ##################IMPORTS################################
 import os
+
+import line as line
 import tensorflow as tf
 import tensorboard
 import csv
@@ -15,11 +17,12 @@ from sklearn.model_selection import train_test_split
 dir_path = os.path.dirname(os.path.realpath(__file__))
 filename = dir_path + "training.csv"
 
-features = tf.placeholder(tf.int32, shape=[3], name=' ')
-country = tf.placeholder(tf.string, name=' ')
-total = tf.reduce_sum(features, name=' ')
+features = tf.placeholder(tf.int32, shape=[3], name='features')
+country = tf.placeholder(tf.string, name='country')
+indicator = tf.placeholder(tf.string, name='indicator')
+total = tf.reduce_sum(features, name='total')
 
-printerop = tf.print(total, [country, features, total], name='')
+printerop = tf.print(total, [country, features, indicator, total], name='printerop')
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -28,20 +31,19 @@ with tf.Session() as sess:
         next(inf)
         for line in inf:
             # reading our data using python into our features
-            country_name, code, gold, silver, bronze, total = line.strip()split(", ")
-            gold = int(gold)
-            silver = int(silver)
-            bronze = int(bronze)
-            total = sess.run(printerop, feed_dict={features: [gold, silver, bronze], country:country_name})
-            print(country_name, total)
+            country_name, country_code, indicator_name, indicator_code = line.strip(), line.split(", ")
+            total = sess.run(printerop, feed_dict={features: [country_code, indicator_code], country: country_name})
+            print(country_name, indicator_name)
+
 
 def create_file_reader(filename_queue):
     reader = tf.TextLineReader(skip_header_line=1)
     _, csv_row = reader.read(filename_queue)
     record_defaults = [[""], [""], [0], [0], [0], [0]]
-    country, code, gold, silver, bronze, total = tf.decode_csv(csv_row, record_defaults=record_defaults)
-    features = tf.pack([gold, silver, bronze])
+    country_name, country_code, indicator_name, indicator_code = tf.decode_csv(csv_row, record_defaults=record_defaults)
+    features = tf.pack([country_name, country_code, indicator_name, indicator_code])
     return features, country
+
 
 filename_queue = tf.train.string_input_producer(filename, num_epocs=1, shuffle=False)
 example, country, = create_file_reader(filename_queue)
@@ -68,12 +70,11 @@ with tf.Session() as sess:
 # dataset = tf.data.experimental.CsvDataset(filenames, record_defaults)
 
 
-
 # dataset_url = ' '
 # data = pd.read_csv(dataset_url)
 # print(data.head())
 
-#dataset_url = ' '
+# dataset_url = ' '
 # data = pd.read_csv('training.csv')
 # print(data.head())
 
