@@ -22,18 +22,31 @@ def csvImport():
 
   with tf.Session() as sess:
     sess.run([inputs, labels])
+csvImport()
 
   ########################Creating an Initialiuzable Iterator##################################
   #This will update the data at runtime making tesnorflow come alive.
-  def iterator(dataset):
+def iterator(dataset):
+    
     x = tf.placeholder(tf.float32, shape=[None,2])
     dataset = tf.data.Dataset.from_sparse_tensor_slices(x)
     
     data = np.random.sample((200, 2))
 
-    iter = dataset.make_initializable_iterator()
-    el = iter.get_next()
-
     with tf.Session() as sess:
-      sess.run(iter.initializer, feed_dict=(x: data))
+      sess.run(iter.initializer, feed_dict={x: data})
       print(sess.run(el))
+
+    #Initializable Iterator to switch between the datasets
+    EPOCHS = 10
+
+    x, y = tf.placeholder(tf.flot32, shape=[None,2]),
+    tf.placeholder(tf.float32, shape=[None,1])
+    dataset = tf.data.Dataset.from_tensor_slices((x, y))
+
+    train_data = (np.random.sample((100,2))), np.random.sample((100,1))
+    test_data = (np.array([[1,2]]) np.array([[0]])
+    iter = dataset.make_initializable_iterator()
+     el = iter.get_next()
+iterator()
+
