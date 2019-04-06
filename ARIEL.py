@@ -20,19 +20,20 @@ writeFile.write(str(data))
 writeFile.close()
 print(data)
 # condenses the information
-data = data[['Adj. Open', 'Adj. High percent', 'Adj. Low Percent', 'Adj. Close', 'Adj.Volume']]
+data = data[['Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume']]
 # creating new variable which is the high low percent
-data['High Low Percent'] = (data['Adj. High'] - data['Adj. Close']) / data['Adj. Close'] * 100.0
+data['HL_PCT'] = (data['Adj. High'] - data['Adj. Close']) / data['Adj. Close'] * 100.0
 # creating new variable which is the Percentage Change
-data['Percent Change'] = (data['Adj. Close'] - data['Adj. Open']) / data['Adj. Open'] * 100.0
+data['PCT_Change'] = (data['Adj. Close'] - data['Adj. Open']) / data['Adj. Open'] * 100.0
 
-data = data[['Adj. Close', 'High Low Percent', 'Percent Change', 'Adj. Volume']]
+data = data[['Adj. Close', 'HL_PCT', 'PCT_Change', 'Adj. Volume']]
 
 # forecasting out dataset
-forecastData = 'Adk. Close'
+forecastData = 'Adj. Close'
 data.fillna(-99999, inplace=True)
+print(data)
 # comment if necessary
-# print(len(data))
+print(len(data))
 
 forecastOut = int(math.ceil(0.02*len(data)))
 
@@ -81,10 +82,4 @@ data_plot.xlabel('Date')
 data_plot.ylabel('price')
 data_plot.show()
 print(accuracy)
-
-
-writeFile = open("ARIELDataWriteModifiedData.txt", "w")
-writeFile.write(str(data))
-writeFile.close()
-print(data)
 
