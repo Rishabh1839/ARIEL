@@ -1,95 +1,90 @@
-# Ariel Core engine
-
-# ##################IMPORTS################################
-import os
-import tensorflow as tf
-import tensorboard
-import csv
 import numpy as np
-from tensorflow import keras
-# using pandas and sklearn for testing and training our data by splitting the data
 import pandas as pd
-# splits data into 2 parts
-from sklearn.model_selection import train_test_split
+import pickle as pkl
+import quandl, math, datetime
+from sklearn import preprocessing
+from sklearn.svm.libsvm import cross_validation
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as data_plot
+from matplotlib import style
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-filename = dir_path + "training.csv"
+# using style
+style.use('ggplot')
 
-features = tf.placeholder(tf.int32, shape=[3], name='features')
-country = tf.placeholder(tf.string, name='country')
-indicator = tf.placeholder(tf.string, name='indicator')
-total = tf.reduce_sum(features, name='total')
+quandl.api_config.ApiConfig.api_key = 'h-FrEDCiZnh5cKM3Cuva'
+# getting random data from the api's
+data = quandl.get('WIKI/GOOGL')
+# writing
+writeFile = open("ARIELDataWrite.txt", "w")
+writeFile.write(str(data))
+writeFile.close()
+print(data)
+# condenses the information
+data = data[['Adj. Open', 'Adj. High percent', 'Adj. Low Percent', 'Adj. Close', 'Adj.Volume']]
+# creating new variable which is the high low percent
+data['High Low Percent'] = (data['Adj. High'] - data['Adj. Close']) / data['Adj. Close'] * 100.0
+# creating new variable which is the Percentage Change
+data['Percent Change'] = (data['Adj. Close'] - data['Adj. Open']) / data['Adj. Open'] * 100.0
 
-printerop = tf.print(total, [country, features, indicator, total], name='printerop')
+data = data[['Adj. Close', 'High Low Percent', 'Percent Change', 'Adj. Volume']]
 
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-    with open(filename) as inf:
-        # skip the header
-        next(inf)
-        for line in inf:
-            # reading our data using python into our features
-            country_name, indicator_name = line.strip(), line.split(", ")
-            total = sess.run(printerop, feed_dict={features: [country, indicator], country: country_name})
-            print(country_name, indicator_name)
+# forecasting out dataset
+forecastData = 'Adk. Close'
+data.fillna(-99999, inplace=True)
+# comment if necessary
+# print(len(data))
+
+forecastOut = int(math.ceil(0.02*len(data)))
+
+data['Label'] = data[forecastData].shift(-forecastOut)
+# print(data)
+
+x = np.array(data.drop(['Label'], 1))
+x = preprocessing.scale(x)
+xLately = x[-forecastOut: ]
+x = x[:-forecastOut]
+data.dropna(inplace = True)
+y = np.array(data['Label'])
+
+trainX, testX, trainY, testY = cross_validation.train_test_split(x, y, test_size=0.2)
+
+frameControl = LinearRegression(n_jobs=-1)
+
+frameControl.fit(trainX, trainY)
+with open('linearregression.pickle', 'wb') as a:
+    pkl.dump(frameControl, a)
+
+inPickle = open('linearregression.pickle', 'rb')
+frameControl = pkl.load(inPickle)
+
+accuracy = frameControl.score(testX, testY) * 100.0
+
+setForecast = frameControl.predict(xLately)
+
+data['Forecasting the Data'] = np.nan
+last_date = data.iloc[-1].name
+last_unix = last_date.timestamp()
+one_day = 86400
+next_unix = last_unix + one_day
+
+for i in setForecast:
+    next_date = datetime.datetime.fromtimestamp(next_unix)
+    next_unix += one_day
+    data.loc[next_date] = [np.nan for _ in range(len(data.columns) - 1)] + [i]
+
+# plot the data for visualization
+data['Adj. Close'].plot()
+data['Forecasting'].plot()
+data_plot.legend(loc=4)
+data_plot.title('Stock Prediction for Tesla')
+data_plot.xlabel('Date')
+data_plot.ylabel('price')
+data_plot.show()
+print(accuracy)
 
 
-def create_file_reader(filename_queue):
-    reader = tf.TextLineReader(skip_header_line=1)
-    _, csv_row = reader.read(filename_queue)
-    record_defaults = [[""], [""], [0], [0], [0], [0]]
-    country_name, country_code, indicator_name = tf.decode_csv(csv_row, record_defaults=record_defaults)
-    features = tf.pack([country_name, country_code, indicator_name])
-    return features, country
+writeFile = open("ARIELDataWriteModifiedData.txt", "w")
+writeFile.write(str(data))
+writeFile.close()
+print(data)
 
-
-filename_queue = tf.train.string_input_producer(filename, num_epocs=1, shuffle=False)
-example, country, = create_file_reader(filename_queue)
-
-with tf.Session() as sess:
-    tf.global_variables_initializer().run()
-    coordinate = tf.train.Coordinator()
-    threads = tf.train.start_queue_runners(coordinate=coordinate)
-    while True:
-        try:
-            example_data, country_name = sess.run([example, country])
-            print(example_data, country_name)
-        except tf.errors.OutOfRangeError:
-            break
-
-# def fileImport():
-# print("Enter file path for the unstructured data.")
-# userData = input("")
-# print(tf.__version__)
-
-# Reading the CSV
-# filenames = ["/home/hunt3r/Desktop/USData1.csv"]
-# record_defaults = [[0.0]] * 8
-# dataset = tf.data.experimental.CsvDataset(filenames, record_defaults)
-
-
-# dataset_url = ' '
-# data = pd.read_csv(dataset_url)
-# print(data.head())
-
-# dataset_url = ' '
-# data = pd.read_csv('training.csv')
-# print(data.head())
-
-
-# y = data.temp
-# x = data.drop('temp', axis=1)
-
-# X_train, X_test, Y_train, X_test = train_test_split(x, y, test_size=0.2)
-# print("\nX_train:\n")
-# print(X_train.head())
-# print(X_train.shape())
-
-# print("\nX_test:\n")
-# print(X_test.head())
-# print(X_test.shape)
-# #############IF I NEED ANYTHING ELSE, ILL ADD IT#########3
-
-# TO DO:
-# BELOW IS THE FILE IMPORT. WE ARE IMPORTING ALL FILES
-# IN A FOLDER ====> /PATH/TO/FOLDER/*   <====ALL FILES
