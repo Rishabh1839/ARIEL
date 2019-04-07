@@ -18,5 +18,4 @@ RUN cd /opt/src/ARIEL && \
 	pip3 install -r requirements.txt
 
 #Let's Ride!
-RUN cd /opt/src/ARIEL && \
-	python3 ARIEL.py
+ENTRYPOINT ["/usr/bin/python3" "ARIEL.py"]
