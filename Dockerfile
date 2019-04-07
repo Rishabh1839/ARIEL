@@ -10,9 +10,12 @@ RUN apt-get update && \
 RUN mkdir -p /opt/src
 RUN git clone --recursive https://github.com/Rishabh1839/ARIEL.git /opt/src/ARIEL
 
+#Update pip
+RUN pip3 install -U pip
+
 #Install Dependencies
 RUN cd /opt/src/ARIEL && \
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 #Let's Ride!
 RUN python3 ARIEL.py
