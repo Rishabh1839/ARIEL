@@ -1,0 +1,8 @@
+//TODO
+    -Deploy to AWS
+    -Build docker image and deploy to DockerHub
+    -Add REDAME.md and any other applicable documentation including licenses
+        -Credits/contributors
+        -Build instructions
+    -Add dependencies to project-root/requirements.txt
+//COMPLETED
