@@ -1,25 +1,31 @@
 import numpy as np
-import pandas as pd
 import pickle as pkl
 import quandl, math, datetime
 from sklearn import preprocessing
-from sklearn.svm.libsvm import cross_validation
+from sklearn import model_selection
+# from sklearn.svm.libsvm import cross_validation
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as data_plot
 from matplotlib import style
+
 
 # using style
 style.use('ggplot')
 
 quandl.api_config.ApiConfig.api_key = 'h-FrEDCiZnh5cKM3Cuva'
-# getting random data from the api's
-data = quandl.get('WIKI/GOOGL')
+# getting random data from the api
+
+stockCode = input("Please enter the Stock Code for predictions: ")
+data = quandl.get('WIKI/' + stockCode)
 # writing
 writeFile = open("ARIELDataWrite.txt", "w")
 writeFile.write(str(data))
 writeFile.close()
 print(data)
+# print(data.head())
+# print(data.keys())
 # condenses the information
+# assert "Forecasting" in data
 data = data[['Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume']]
 # creating new variable which is the high low percent
 data['HL_PCT'] = (data['Adj. High'] - data['Adj. Close']) / data['Adj. Close'] * 100.0
@@ -47,7 +53,7 @@ x = x[:-forecastOut]
 data.dropna(inplace = True)
 y = np.array(data['Label'])
 
-trainX, testX, trainY, testY = cross_validation.train_test_split(x, y, test_size=0.2)
+trainX, testX, trainY, testY = model_selection.train_test_split(x, y, test_size=0.2)
 
 frameControl = LinearRegression(n_jobs=-1)
 
@@ -75,9 +81,9 @@ for i in setForecast:
 
 # plot the data for visualization
 data['Adj. Close'].plot()
-data['Forecasting'].plot()
+data['Forecasting the Data'].plot()
 data_plot.legend(loc=4)
-data_plot.title('Stock Prediction for Tesla')
+data_plot.title('Stock Prediction for ' + stockCode)
 data_plot.xlabel('Date')
 data_plot.ylabel('price')
 data_plot.show()
